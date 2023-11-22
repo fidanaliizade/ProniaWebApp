@@ -7,6 +7,7 @@ namespace ProniaWebApp.Models
         public int Id { get; set; }
         [StringLength(maximumLength: 10, ErrorMessage ="Uzunluq max 10 ola biler!")]
         public string Name { get; set; }
-        public List<Product> Products { get; set; }
+        public List<Product>? Products { get; set; }
+        
     }
 }

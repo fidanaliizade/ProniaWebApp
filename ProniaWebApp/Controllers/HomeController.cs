@@ -15,7 +15,8 @@ namespace ProniaWebApp.Controllers
 
             HomeVM vm = new HomeVM()
             {
-                Products = await _db.Products.Include(p => p.ProductImages).ToListAsync()
+                Products = await _db.Products.Include(p => p.ProductImages).ToListAsync(),
+                Sliders= await _db.Sliders.ToListAsync(),
             };
             return View(vm);
         }

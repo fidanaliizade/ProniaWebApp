@@ -34,7 +34,7 @@ namespace ProniaWebApp.Areas.Manage.Controllers
 			ViewBag.Tags = await _context.Tags.ToListAsync();
             if(!ModelState.IsValid)
             {
-                return View();
+                return View("Error");
             }
             bool resultCategory = await _context.Categories.AnyAsync(c=>c.Id== createProductVM.CategoryId);
             if(!resultCategory)

@@ -52,15 +52,72 @@ namespace ProniaWebApp.Areas.Manage.Controllers
             };
             await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
-			return View(nameof(Index));
+			return RedirectToAction(nameof(Index));
+		}
+
+        public async Task<IActionResult> Update(int id)
+        {
+            Product product = await _context.Products.Where(p => p.Id == id).FirstOrDefaultAsync();
+            if(product is null )
+            {
+                return View("Error");
+            }
+			ViewBag.Categories = await _context.Categories.ToListAsync();
+			ViewBag.Tags = await _context.Tags.ToListAsync();
+            UpdateProductVM updateProductVM = new UpdateProductVM()
+            {
+                Id = id,
+                Name = product.Name,
+                Price = product.Price,
+                Description = product.Description,
+                ProductCode = product.ProductCode,
+                CategoryId = product.CategoryId,
+            };
+
+
+			return View(updateProductVM);
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Update(UpdateProductVM updateProductVM)
+        {
+			ViewBag.Categories = await _context.Categories.ToListAsync();
+			ViewBag.Tags = await _context.Tags.ToListAsync(); 
+            if(!ModelState.IsValid)
+            {
+                return View();
+            }
+			Product exsistProduct = await _context.Products.Where(p => p.Id == updateProductVM.Id).FirstOrDefaultAsync();
+			if (exsistProduct is null)
+			{
+				return View("Error");
+			}
+			bool resultCategory = await _context.Categories.AnyAsync(c => c.Id == updateProductVM.CategoryId);
+			if (!resultCategory)
+			{
+				ModelState.AddModelError("CatgoryId", "No such category exists.");
+				return View();
+			}
+            exsistProduct.Name = updateProductVM.Name;
+            exsistProduct.Price = updateProductVM.Price;
+            exsistProduct.ProductCode = updateProductVM.ProductCode;
+            exsistProduct.Description = updateProductVM.Description;
+            exsistProduct.CategoryId= updateProductVM.CategoryId;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+
+		}
         public IActionResult Delete(int id)
         {
             var product = _context.Products.FirstOrDefault(p => p.Id == id);
             if(product is null) 
             {
                 return View("Error");
-            }
+            };
+            _context.Products.Remove(product);
+            _context.SaveChanges();
+           
             return RedirectToAction(nameof(Index));
         }
     }

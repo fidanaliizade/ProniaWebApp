@@ -31,9 +31,16 @@
            <label asp-for="CategoryId" class="form-label">Categories</label>
 			<select class="form-select" asp-for= "CategoryId" asp-items="new SelectList(ViewBag.Categories,nameof(Category.Id),nameof(Category.Name))">
 				<option selected>Open this select menu</option>
+				</select>
 				<span asp-validation-for="CategoryId" style="color:red"></span>
-</select>
-</div>
+		</div>
+				<div class="mb-3 col-md-3">
+		   <label asp-for="TagIds" class="form-label">Tags</label>
+			<select class="form-select" asp-for= "TagIds" asp-items="new SelectList(ViewBag.Tags,nameof(Tag.Id),nameof(Tag.Name))">
+				
+				</select>
+				<span asp-validation-for="TagIds" style="color:red"></span>
+		</div>
 		</div>
 
 		<button type="submit" class="btn btn-primary">Submit</button>

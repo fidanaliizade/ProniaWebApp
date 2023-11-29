@@ -49,7 +49,35 @@ namespace ProniaWebApp.Areas.Manage.Controllers
                 Description = createProductVM.Description,
                 ProductCode = createProductVM.ProductCode,
                 CategoryId = createProductVM.CategoryId,
+             
             };
+            if (createProductVM.TagIds != null)
+            {
+                foreach (int tagId in createProductVM.TagIds)
+                {
+                    bool resultTag = await _context.Tags.AnyAsync(c => c.Id == tagId);
+                    if (!resultTag)
+                    {
+                        ModelState.AddModelError("TagIds", "No such tag exists.");
+                        return View();
+                    }
+                    ProductTag productTag = new ProductTag()
+                    {
+                        Product = product,
+                        TagId = tagId
+                    };
+                    _context.ProductTags.Add(productTag);
+
+
+
+
+
+                }
+            }
+            
+
+
+
             await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
 			return RedirectToAction(nameof(Index));
@@ -57,7 +85,10 @@ namespace ProniaWebApp.Areas.Manage.Controllers
 
         public async Task<IActionResult> Update(int id)
         {
-            Product product = await _context.Products.Where(p => p.Id == id).FirstOrDefaultAsync();
+            Product product = await _context.Products.Include(p=>p.Category)
+                .Include(p=>p.ProductTags)
+                .ThenInclude(p=>p.Tag)
+                .Where(p => p.Id == id).FirstOrDefaultAsync();
             if(product is null )
             {
                 return View("Error");
@@ -72,8 +103,13 @@ namespace ProniaWebApp.Areas.Manage.Controllers
                 Description = product.Description,
                 ProductCode = product.ProductCode,
                 CategoryId = product.CategoryId,
+                TagIds = new List<int>()
             };
 
+            foreach (var item in product.ProductTags)
+            {
+                updateProductVM.TagIds.Add(item.TagId);
+;            }
 
 			return View(updateProductVM);
         }
@@ -88,8 +124,8 @@ namespace ProniaWebApp.Areas.Manage.Controllers
             {
                 return View();
             }
-			Product exsistProduct = await _context.Products.Where(p => p.Id == updateProductVM.Id).FirstOrDefaultAsync();
-			if (exsistProduct is null)
+			Product existProduct = await _context.Products.Where(p => p.Id == updateProductVM.Id).FirstOrDefaultAsync();
+			if (existProduct is null)
 			{
 				return View("Error");
 			}
@@ -99,11 +135,62 @@ namespace ProniaWebApp.Areas.Manage.Controllers
 				ModelState.AddModelError("CatgoryId", "No such category exists.");
 				return View();
 			}
-            exsistProduct.Name = updateProductVM.Name;
-            exsistProduct.Price = updateProductVM.Price;
-            exsistProduct.ProductCode = updateProductVM.ProductCode;
-            exsistProduct.Description = updateProductVM.Description;
-            exsistProduct.CategoryId= updateProductVM.CategoryId;
+            existProduct.Name = updateProductVM.Name;
+            existProduct.Price = updateProductVM.Price;
+            existProduct.ProductCode = updateProductVM.ProductCode;
+            existProduct.Description = updateProductVM.Description;
+            existProduct.CategoryId= updateProductVM.CategoryId;
+
+
+            if (updateProductVM.TagIds != null)
+            {
+                foreach (int tagId in updateProductVM.TagIds)
+                {
+                    bool resultTag = await _context.Tags.AnyAsync(c => c.Id == tagId);
+                    if (!resultTag)
+                    {
+                        ModelState.AddModelError("TagIds", "No such tag exists.");
+                        return View();
+                    }
+
+                }
+
+
+                List<int> createTags;
+                if(existProduct!=null)
+                {
+                    createTags= updateProductVM.TagIds.Where(ti=>!existProduct.ProductTags.Exists(pt => pt.TagId == ti)).ToList();
+                }
+                else
+                {
+                    createTags=updateProductVM.TagIds.ToList();
+                }
+
+                foreach (var tagid in createTags)
+                {
+                    ProductTag productTag = new ProductTag()
+                    {
+                        TagId = tagid,
+                        ProductId = existProduct.Id
+                    };
+                    //existProduct.ProductTags.Add(productTag);
+
+                    await  _context.ProductTags.AddAsync(productTag);
+                }0
+
+                List<ProductTag> removeTags=existProduct.ProductTags.Where(pt=>updateProductVM.TagIds.Contains(pt.TagId)).ToList();
+                 
+                _context.ProductTags.RemoveRange(removeTags);
+
+            }
+            else
+            {
+                var productTagList = _context.ProductTags.Where(pt=>pt.ProductId == existProduct.Id).ToList();
+                _context.ProductTags.RemoveRange(productTagList);
+            }
+
+
+
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
 

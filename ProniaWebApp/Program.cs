@@ -1,3 +1,5 @@
+using ProniaWebApp.Services;
+
 namespace ProniaWebApp
 {
     public class Program
@@ -11,6 +13,7 @@ namespace ProniaWebApp
             {
                 opt.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
             });
+            builder.Services.AddScoped<LayoutService>();
             var app = builder.Build();
 
             app.MapControllerRoute(

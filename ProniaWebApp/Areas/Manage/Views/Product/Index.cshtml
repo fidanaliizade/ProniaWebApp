@@ -9,7 +9,7 @@
 		<a class="btn btn-primary" asp-controller="Product" asp-action="Create">Create</a>
 
 	</div>
-
+	<span style='color:red'>@TempData["Error"]</span>
 	<table class="table">
 		<thead>
 			<tr>
@@ -19,6 +19,8 @@
 				<th scope="col">Price</th>
 				<th scope="col">Category</th>
 				<th scope="col">Tag</th>
+				<th scope="col">Image</th>
+
 
 
 			</tr>
@@ -39,14 +41,17 @@
 							tagcount++;
 
 
-							@pt.Tag.Name @(item.ProductTags.Count == count ? "" : ", ")      
+							@pt.Tag.Name@(item.ProductTags.Count == tagcount ? "" : ", ")      
 						}
 						@{
 							tagcount = 0;
 						}
 						</td>
-
-
+						<td>
+						<div style="width:100px">
+							<img width="100%" src="~/Upload/Product/@item.ProductImages.FirstOrDefault(p=>p.IsPrime==true)?.ImgUrl">
+						</div>
+						</td>
 							<td>
 								<a class="btn btn-secondary" asp-controller="Product" asp-action="Update" asp-route-id="@item.Id">Update</a>
 								<a class="btn btn-danger" asp-controller="Product" asp-action="Delete" asp-route-id="@item.Id">Delete</a>

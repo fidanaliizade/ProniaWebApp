@@ -41,6 +41,23 @@
 				</select>
 				<span asp-validation-for="TagIds" style="color:red"></span>
 		</div>
+		<div class="row">
+			<div class="mb-3 col-md-3">
+				<label asp-for="MainPhoto" class="form-label">Main Photo</label>
+				<input asp-for="MainPhoto" class="form-control">
+				<span asp-validation-for="MainPhoto" style="color:red"></span>
+			</div>
+			<div class="mb-3 col-md-3">
+				<label asp-for="HoverPhoto" class="form-label">Hover Photo</label>
+				<input asp-for="HoverPhoto" class="form-control">
+				<span asp-validation-for="HoverPhoto" style="color:red"></span>
+			</div>
+			<div class="mb-3 col-md-3">
+				<label asp-for="Photos" class="form-label">Additional Photos</label>
+				<input asp-for="Photos" class="form-control">
+				<span asp-validation-for="Photos" style="color:red"></span>
+			</div>
+		</div>
 		</div>
 
 		<button type="submit" class="btn btn-primary">Submit</button>

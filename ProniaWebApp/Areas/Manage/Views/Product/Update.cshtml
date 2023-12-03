@@ -38,13 +38,57 @@
 <div class="mb-3 col-md-3">
 		   <label asp-for="TagIds" class="form-label">Tags</label>
 			<select class="form-select" asp-for= "TagIds" asp-items="new SelectList(ViewBag.Tags,nameof(Tag.Id),nameof(Tag.Name))">
-				<option selected>Open this select menu</option>
 				</select>
 				<span asp-validation-for="TagIds" style="color:red"></span>
 
 </div>
 		</div>
+		<div class="row">
+			<div class="mb-3 col-md-3">
+				<div style="width:100px; height:100px">
+	       <img style=width:"100%" src="~/Upload/Product/@Model.productImages.FirstOrDefault(p=>p.IsPrime==true)?.ImgUrl" />
+		   </div>
+				<label asp-for="MainPhoto" class="form-label">Main Photo</label>
+				<input asp-for="MainPhoto" class="form-control">
+				<span asp-validation-for="MainPhoto" style="color:red"></span>
+			</div>
+			<div class="mb-3 col-md-3">
+				<div style="width:100px; height:100px">
+				<img style=width:"100%" src="~/Upload/Product/@Model.productImages.FirstOrDefault(p=>p.IsPrime==false)?.ImgUrl" />
+				</div>
+				<label asp-for="HoverPhoto" class="form-label">Hover Photo</label>
+				<input asp-for="HoverPhoto" class="form-control">
+				<span asp-validation-for="HoverPhoto" style="color:red"></span>
+			</div>
+		
+		</div>
+		<div class="row">
+			
+				@foreach (var item in Model.productImages.Where(p => p.IsPrime == null)?.ToList())
+				{
+						<div class=" col-2 position-relative">
+					<img style="width:100%;height:150px" src="~/Upload/Product/@item.ImgUrl" />
+					<input type="hidden" value="@item.Id" name="ImageIds">
+					<button type"button" class="btn btn-danger position-absolute custom-delete" style="right:10px">X</button>
+				</div>
+				}
+				<label asp-for="Photos" class="form-label">Additional Photos</label>
+				<input asp-for="Photos" class="form-control">
+				<span asp-validation-for="Photos" style="color:red"></span>
+		
+		</div>
 
 		<button type="submit" class="btn btn-primary">Submit</button>
 	</form>
 </div>
+
+
+<script>
+	var btn=document.querySelectorAll(".custom-delete")
+	btn.forEach(b=>{
+		b.addEventListener("click",function()
+	{
+		b.parentElement.remove()
+	})
+	})
+</script>

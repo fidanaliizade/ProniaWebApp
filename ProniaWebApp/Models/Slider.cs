@@ -3,10 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ProniaWebApp.Models
 {
-	public class Slider
+	public class Slider:BaseEntity
 	{
 		 
-        public int Id { get; set; }
 		[Required, StringLength(25, ErrorMessage = "The maximum length can be 25")]
 		public string Title { get; set; }
 		public string SubTitle { get; set; }

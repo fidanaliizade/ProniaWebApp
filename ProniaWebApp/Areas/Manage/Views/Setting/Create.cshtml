@@ -1,0 +1,19 @@
+﻿@model Setting
+<div class="container">
+    <h1>Create Setting</h1>
+<form method="post">
+  <div class="mb-3">
+    <label asp-for="Key" class="form-label">Key</label>
+    <input asp-for="Key" type="text" class="form-control">
+    <span asp-validation-for="Key" style="color:red"> </span>
+
+  </div>
+  <div class="mb-3">
+    <label asp-for="Value" class="form-label">Value</label>
+    <input asp-for="Value" type="text" class="form-control">
+    <span asp-validation-for="Value" style="color:red"> </span>
+
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+</div>

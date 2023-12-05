@@ -64,5 +64,10 @@ namespace ProniaWebApp.Areas.Manage.Controllers
 		
 			return RedirectToAction("Index");   
 		}
+
+        public string GetString()
+        {
+            return "";
+        }
 	}
 }

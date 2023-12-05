@@ -12,6 +12,13 @@ namespace ProniaWebApp.Controllers
         }
         public async  Task<IActionResult> Index()
         {
+            //Response.Cookies.Append("Name", "Cookie", new CookieOptions()
+            //{
+            //    MaxAge = TimeSpan.FromSeconds(30)
+            //});
+
+            //HttpContext.Session.SetString("Name", "Ilkin");
+
 
             HomeVM vm = new HomeVM()
             {

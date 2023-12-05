@@ -20,7 +20,7 @@ namespace ProniaWebApp.Areas.Manage.Controllers
 
 		public async Task<IActionResult> Index()
         {
-            List<Product> product = await _context.Products.Include(p => p.Category)
+            List<Product> product = await _context.Products.Where(p=>p.IsDeleted==false).Include(p => p.Category)
                 .Include(p => p.ProductTags).ThenInclude(pt => pt.Tag).Include(p=>p.ProductImages).ToListAsync();
             return View(product);
         }
@@ -164,7 +164,7 @@ namespace ProniaWebApp.Areas.Manage.Controllers
 
         public async Task<IActionResult> Update(int id)
         {
-            Product product = await _context.Products.Include(p=>p.Category)
+            Product product = await _context.Products.Where(p=>p.IsDeleted==false).Include(p=>p.Category)
                 .Include(p=>p.ProductTags)
                 .ThenInclude(p=>p.Tag)
                 .Include(p=>p.ProductImages)
@@ -265,6 +265,8 @@ namespace ProniaWebApp.Areas.Manage.Controllers
                         ProductId = existProduct.Id
                     };
                     //existProduct.ProductTags.Add(productTag);
+
+
 
                     await _context.ProductTags.AddAsync(productTag);
                 };
@@ -381,15 +383,15 @@ namespace ProniaWebApp.Areas.Manage.Controllers
 		}
         public IActionResult Delete(int id)
         {
-            var product = _context.Products.FirstOrDefault(p => p.Id == id);
+            var product = _context.Products.Where(p=>p.IsDeleted==false).FirstOrDefault(p => p.Id == id);
             if(product is null) 
             {
                 return View("Error");
             };
-            _context.Products.Remove(product);
+            product.IsDeleted=true;
             _context.SaveChanges();
            
-            return RedirectToAction(nameof(Index));
+            return Ok();
         }
     }
 }

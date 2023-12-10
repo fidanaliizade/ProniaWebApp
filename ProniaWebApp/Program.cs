@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using ProniaWebApp.Services;
 
 namespace ProniaWebApp
@@ -8,11 +9,22 @@ namespace ProniaWebApp
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllersWithViews();
-            builder.Services.AddSession(opt=>
+            //builder.Services.AddSession(opt=>
+            //{
+            //    opt.IdleTimeout=TimeSpan.FromSeconds(5);
+            //});
+
+            builder.Services.AddIdentity<AppUser, IdentityRole>(opt =>
             {
-                opt.IdleTimeout=TimeSpan.FromSeconds(5);
-            });
-           
+                opt.Password.RequiredLength = 10;
+                opt.Password.RequireNonAlphanumeric = true;
+                opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";
+                opt.Lockout.MaxFailedAccessAttempts = 3;
+                opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+
+            }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+
+
 
             builder.Services.AddDbContext<AppDbContext>(opt =>
             {
@@ -27,7 +39,9 @@ namespace ProniaWebApp
             builder.Services.AddScoped<LayoutService>();
             builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             var app = builder.Build();
-			app.UseSession();
+			//app.UseSession();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
 			app.MapControllerRoute(
             name: "areas",

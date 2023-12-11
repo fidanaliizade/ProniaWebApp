@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ProniaWebApp.Areas.Manage.Controllers
 {
@@ -11,20 +12,21 @@ namespace ProniaWebApp.Areas.Manage.Controllers
 		{
 			_context = context;
 		}
-
+       
 		public IActionResult Index()
         {
             List<Category> categories = _context.Categories.Include(p => p.Products).ToList();
             return View(categories);
         }
         [HttpGet]
+        [Authorize(Roles ="Admin, Moderator")]
         public IActionResult Create() 
         { 
             return View();
         }
 
         [HttpPost]
-
+        [Authorize(Roles ="Admin, Moderator")]
 		public IActionResult Create(Category category)
 		{
             if(!ModelState.IsValid)
@@ -35,7 +37,7 @@ namespace ProniaWebApp.Areas.Manage.Controllers
             _context.SaveChanges();
 			return RedirectToAction("Index");
 		}
-
+        [Authorize(Roles ="Admin")]
 		public IActionResult Delete(int id)
         {
             Category category = _context.Categories.Find(id);
@@ -44,13 +46,14 @@ namespace ProniaWebApp.Areas.Manage.Controllers
 			return RedirectToAction("Index");
 		}
         [HttpGet]
-        public IActionResult Update(int id)
+		[Authorize(Roles = "Admin")]
+		public IActionResult Update(int id)
         {
             Category category =_context.Categories.Find(id);
             return View(category);
         }
         [HttpPost]
-
+		[Authorize(Roles = "Admin")]
 		public IActionResult Update(Category newCategory)
 		{
 			if (!ModelState.IsValid)

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProniaWebApp.Areas.Manage.ViewModels.Product;
 using ProniaWebApp.Helpers;
 using ProniaWebApp.Models;
@@ -6,6 +7,7 @@ using ProniaWebApp.Models;
 namespace ProniaWebApp.Areas.Manage.Controllers
 {
     [Area("Manage")]
+    [Authorize]
     public class ProductController : Controller
     {
 

@@ -126,7 +126,7 @@ stylesheet">
 					<a href="tel://@setting["Phone"]">@setting["Phone"]</a>
 				  </div>
 
-				  <a href="index.html" class="header-logo">
+				  <a asp-action="Index" asp-controller="Home" class="header-logo">
 					<img src="~/assets/images/logo/@setting["Logo"]" alt="Header Logo" />
 				  </a>
 
@@ -1034,8 +1034,8 @@ stylesheet">
 			  <span class="ammount">$@Total</span>
 			</div>
 			<div class="group-btn_wrap d-grid gap-2">
-			  <a href="cart.html" class="btn btn-dark">View Cart</a>
-			  <a href="checkout.html" class="btn btn-dark">Checkout</a>
+			  <a asp-action="Index" asp-controller="Cart" class="btn btn-dark">View Cart</a>
+			  <a asp-action="Checkout" asp-controller="Cart" class="btn btn-dark">Checkout</a>
 			</div>
 		  </div>
 		</div>

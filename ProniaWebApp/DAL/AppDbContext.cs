@@ -17,5 +17,8 @@ namespace ProniaWebApp.DAL
         public DbSet<ProductImages> ProductImages { get; set; }
 		public DbSet<Slider> Sliders { get; set; }
         public DbSet<Setting> Settings { get; set; } 
+        public DbSet<BasketItem> BasketItems { get; set; }  
+        public DbSet<Order> Orders { get; set; }  
+
 	}
 }
